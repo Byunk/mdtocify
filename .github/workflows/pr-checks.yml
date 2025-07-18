@@ -7,6 +7,8 @@ on:
 jobs:
   pr-checks:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout code
@@ -52,9 +54,3 @@ jobs:
 
       - name: Run tests with coverage
         run: pnpm run test:coverage
-
-      - name: Comment PR with coverage
-        uses: romeovs/lcov-reporter-action@v0.4.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          lcov-file: ./coverage/lcov.info
