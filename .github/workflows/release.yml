@@ -3,8 +3,6 @@ name: Release
 on:
   push:
     branches: [main]
-    tags:
-      - "v*"
 
 jobs:
   release:
@@ -20,18 +18,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check if tag is on main branch
-        run: |
-          # Get the commit hash of the tag
-          TAG_COMMIT=$(git rev-parse ${{ github.ref }})
-
-          # Check if this commit exists on main branch
-          if ! git merge-base --is-ancestor $TAG_COMMIT origin/main; then
-            echo "Tag ${{ github.ref }} is not on main branch. Skipping release."
-            exit 1
-          fi
-
-          echo "Tag ${{ github.ref }} is on main branch. Proceeding with release."
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -60,17 +46,35 @@ jobs:
       - name: Build package
         run: pnpm run build
 
+      - name: Check if version exists on npm
+        id: version-check
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          
+          echo "version=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
+          
+          if npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version 2>/dev/null; then
+            echo "Version ${PACKAGE_VERSION} already exists on npm. Skipping publish."
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "Version ${PACKAGE_VERSION} does not exist. Proceeding with publish."
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Publish to npm
+        if: steps.version-check.outputs.skip == 'false'
         run: pnpm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
+        if: steps.version-check.outputs.skip == 'false'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: v${{ steps.version-check.outputs.version }}
+          release_name: Release v${{ steps.version-check.outputs.version }}
           draft: false
           prerelease: false
