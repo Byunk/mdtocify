@@ -18,7 +18,6 @@ jobs:
         with:
           fetch-depth: 0
 
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -51,9 +50,9 @@ jobs:
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           PACKAGE_NAME=$(node -p "require('./package.json').name")
-          
+
           echo "version=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
-          
+
           if npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version 2>/dev/null; then
             echo "Version ${PACKAGE_VERSION} already exists on npm. Skipping publish."
             echo "skip=true" >> $GITHUB_OUTPUT
@@ -64,13 +63,13 @@ jobs:
 
       - name: Publish to npm
         if: steps.version-check.outputs.skip == 'false'
-        run: pnpm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         if: steps.version-check.outputs.skip == 'false'
-        uses: actions/create-release@v1
+        uses: elgohr/Github-Release-Action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
