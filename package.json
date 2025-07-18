@@ -1,6 +1,6 @@
 {
   "name": "mdtocify",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A simple and efficient TypeScript library for generating table of contents (TOC) from Markdown text. Extract headings and create structured navigation for your documentation.",
   "type": "module",
   "main": "dist/index.js",
@@ -79,18 +79,18 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.4",
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
     "@eslint/js": "^9.31.0",
-    "@types/jest": "^29.5.13",
-    "@types/node": "^22.5.5",
-    "babel-jest": "^29.7.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.0.14",
+    "babel-jest": "^30.0.4",
     "eslint": "^9.31.0",
     "globals": "^16.3.0",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.2.5",
+    "jest": "^30.0.4",
+    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.2",
+    "typescript": "^5.8.3",
     "typescript-eslint": "^8.37.0"
   }
 }
