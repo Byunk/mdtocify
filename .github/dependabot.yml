@@ -7,8 +7,6 @@ updates:
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 10
-    reviewers:
-      - "Byunk"
     assignees:
       - "Byunk"
     commit-message:
@@ -16,7 +14,6 @@ updates:
       include: "scope"
     labels:
       - "dependencies"
-      - "automated"
     
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -25,13 +22,10 @@ updates:
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 5
-    reviewers:
-      - "Byunk"
     assignees:
       - "Byunk"
     commit-message:
       prefix: "chore(actions)"
       include: "scope"
     labels:
-      - "github-actions"
-      - "automated"
+      - "dependencies"
